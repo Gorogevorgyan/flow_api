@@ -3,10 +3,9 @@ import { WorkflowsService } from './workflows.service';
 import { WorkflowsController } from './workflows.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Workflow } from './workflow.entity';
-import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Workflow]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Workflow])],
   providers: [WorkflowsService],
   controllers: [WorkflowsController],
   exports: [WorkflowsService]

@@ -2,24 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { Workflow } from './workflow.entity';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class WorkflowsService {
   constructor(
     @InjectRepository(Workflow)
     private workflowsRepository: Repository<Workflow>,
-    private readonly authService: AuthService,
   ) {
   }
 
   async create(workflow: Partial<Workflow>, user): Promise<Workflow> {
     const newWorkflow = this.workflowsRepository.create({ ...workflow, user });
-    console.log(newWorkflow);
     try {
-      const a = await this.workflowsRepository.save(newWorkflow);
-      console.log(a);
-      return a;
+     return await this.workflowsRepository.save(newWorkflow);
     } catch (e) {
       console.log(e);
       throw Error('ads');
@@ -64,6 +59,7 @@ export class WorkflowsService {
       if (result.affected === 0) {
         throw new NotFoundException(`Workflow with ID ${id} not found`);
       }
+      return
     }
     throw new NotFoundException(`Action not allowed`);
 
