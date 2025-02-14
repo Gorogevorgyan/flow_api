@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres
+    container_name: workflow_db
+    environment:
+      POSTGRES_USER: workflow
+      POSTGRES_PASSWORD: workflow_db_pass
+      POSTGRES_DB: workflow_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # NestJS application service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: workflow_app
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USERNAME: workflow
+      DB_PASSWORD: workflow_db_pass
+      DB_DATABASE: workflow_db
+      JWT_SECRET: workflow_jwt_secret
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    volumes:
+      - ./src:/app/src
+
+volumes:
+  postgres_data:
